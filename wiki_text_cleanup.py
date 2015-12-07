@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import re
+import collections
 from AppKit import NSPasteboard,NSObject,NSStringPboardType
 
 def sendToClipBoard(string):
@@ -10,12 +11,61 @@ def sendToClipBoard(string):
     pasteboard.declareTypes_owner_([NSStringPboardType], emptyOwner)
     pasteboard.setString_forType_(string, NSStringPboardType)
 
+def replaceRomanNumerals(string):
+    dict = collections.OrderedDict()
+    dict['VIII'] = '8'
+    dict['VII'] = '7'
+    dict['VI'] = '6'
+    dict['IV'] = '4'
+    dict['V'] = '5' 
+    dict['IX'] = '9' 
+    dict['X'] = '10'
+    dict['III'] = '3' 
+    dict['II'] = '2' 
+    dict['I'] = '1'
+    for i, v in dict.items():
+        string = string.replace(str(i), str(v))
+    return string
+
+def replaceRomanNumerals(string):
+    dict = collections.OrderedDict()
+    dict['VIII'] = '8'
+    dict['VII'] = '7'
+    dict['VI'] = '6'
+    dict['IV'] = '4'
+    dict['V'] = '5' 
+    dict['IX'] = '9' 
+    dict['X'] = '10'
+    dict['III'] = '3' 
+    dict['II'] = '2' 
+    dict['I'] = '1'
+    for i, v in dict.items():
+        string = string.replace(str(i), str(v))
+    return string
+
+def replaceRomanNumeralsOrdinal(string):
+    dict = collections.OrderedDict()
+    dict['VIII'] = 'the eighth'
+    dict['VII'] = 'the seventh'
+    dict['VI'] = 'the sixth'
+    dict['IV'] = 'the fourth'
+    dict['V'] = 'the fifth' 
+    dict['IX'] = 'the ninth' 
+    dict['X'] = 'the tenth'
+    dict['III'] = 'the third' 
+    dict['II'] = 'the second' 
+    dict['I'] = 'the first'
+    for i, v in dict.items():
+        string = string.replace(str(i), str(v))
+    return string
+    
 
 filename = '/Users/oknate2/Downloads/sample.txt'
 
 searchreplace  = {
   'née' : 'nay',
   'Fiennes' : 'Fines',
+  '[T]he' : 'The',
   'Ralph Fines' : 'Rafe Fines',
   'Scorsese' : 'Score Sazie',
   'Anthony Hopkins' : 'Ann tonnie Hopkins',
@@ -29,9 +79,10 @@ searchreplace  = {
   'Mathieu' : 'Matt hew',
   'Genghis Khan' : 'Gang gus Con',
   'Haneke' : 'Haneka',
-  'Truffaut' : 'True foe',
+  'Nicodemus' : 'Nickadeemus',
+  'Richard III' : 'Richard the third',
   'lives' : 'livs',
-  'the livs' : 'the lives',
+  'the livs' : 'the lyves',
   'Von Trier' : 'von treer',
   'von Trier' : 'von treer',
   'Jean Genet' : 'John \'ngine nay',
@@ -41,8 +92,12 @@ searchreplace  = {
   'Arrabal' : 'Ah rah ball',
   'Havel' : 'Hov vell',
   'Albert Camus' : 'All bear commu',
+  'François Truffaut' : 'Frons wah tru fo',
+  'Truffaut' : 'tru fo',
   'Jodorowsky' : 'hoder off ski',
   'phoneticist' : 'phonetisist',
+  'Simone de Beauvoir' : 'See moan duh Bove wahr',
+  'Beauvoir' : 'Bove wahr',
   'cliché' : 'klee shay',
   "bipolarity" : "by polarity",
   "oxymoronic" : 'ocksie moronic',
@@ -124,6 +179,7 @@ searchreplace  = {
   'Dreiser' : 'Dry zer',
   'Proust' : 'Proost',
   'Augie' : 'Oggy',
+  'Sergio Leone' : 'Sair-Joe Lay-own-E',
   'psychoses' : 'sike oh sieze',
   'chrissake' : 'cry sake',
   'vuitton' : 'voo E tone',
@@ -183,7 +239,6 @@ searchreplace  = {
   'Lt.' : 'Lieutenant',
   'Stephanides' : 'Steff on a deez',
   'Teutonic' : 'two tonic',
-  'U.S.' : 'US',
   'Halle' : 'Hally',
   'Linklater' : 'Link later',
   'Fritz Lang' : 'Fritz Long',
@@ -250,8 +305,14 @@ searchreplace  = {
   'Antolini' : 'antoleenie',
   "Brolin" : "brole in",
   "Ejiofor" : "edgy oh four",
-  "Cervantes" : "sir van tease",
+  'Jean-Paul' : 'Jhawn Paul',
+  'candide' : 'con deed',
+  "Cervantes" : "sair-von tess",
   "Goethe" : 'gurta',
+  'Thomas Mann' : 'Toe moss Munn',
+  'Saint-Exupery' : 'Sawn Tek Soup parie',
+  'Mallarmé' : 'Mall arm may',
+  'Stéphane' : 'Steff on',
   "Paglia" : "Palia",
   "Maugham" : "maw um",
   'Prokofiev' : 'prokofe eeyev',
@@ -275,7 +336,7 @@ searchreplace  = {
   "9/11" : 'nine eleven',
   'Rogen' : 'Roegen',
   'whilst' : 'while',
-  "vs. " : 'versus ',
+  " vs. " : ' versus ',
   'Aykroyd' : 'ack a roid',
   'je ne sais quoi' : 'junna say kwa',
   'Prufrock' : 'proo frock',
@@ -390,6 +451,8 @@ searchreplace  = {
   'Ö' : 'O',
   'ß' : 'ss',
   'þ' : 'b',
+  'š' : 's',
+  'Š' : 'S', 
   'Þ' : 'b',
   'ú' : 'u',
   'Ú' : 'U',
@@ -414,6 +477,10 @@ for line in f1:
     for i, v in searchreplace.items():
         newline = newline.replace(str(i), str(v))
     newline = re.sub('\[\d+\]', '', newline);
+    newline = re.sub('Chapter (IX|IV|V?I{0,3})', lambda match: "Chapter {0}".format(replaceRomanNumerals(match.group(1))), newline);
+    newline = re.sub('Scene (IX|IV|V?I{0,3})', lambda match: "Scene {0}".format(replaceRomanNumerals(match.group(1))), newline);
+    #newline = re.sub('([A-Z][a-z]+) (IX|IV|V?I{0,3})', lambda match: "{0} {1}".format(match.group(1), replaceRomanNumeralsOrdinal(match.group(2))), newline);  
+    newline = re.sub('£(\d+)', r'\1 pounds', newline);
     newline = re.sub('\[note\s[0-9]+\]', '', newline);
     newline = re.sub('\(([0-9][0-9]{0,2})\)', r'', newline); # remove spaces after initials
     newline = re.sub('([A-Z])\.([A-Z])\.', r'\1 \2 ', newline); # remove spaces after initials
